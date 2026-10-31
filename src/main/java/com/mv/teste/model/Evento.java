@@ -1,95 +1,122 @@
 package com.mv.teste.model;
 
-
-import java.util.HashSet;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
-import jakarta.persistence.Table;
-
-@Entity 
+@Entity
 @Table(name = "tb_evento")
 public class Evento {
 
-    @Id 
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    private String titulo;
+
+    @Column(nullable = false)
+    private String nome;
+
     private String descricao;
-    private String data;
 
-    @ManyToOne
-    @JoinColumn (name = "categoria_id")
-    private Categoria categoria;
+    private String tipo;
 
-    @ManyToMany 
-    @JoinTable(
-        name = "tb_evento_participante",
-        joinColumns = @JoinColumn(name = "evento_id"),
-        inverseJoinColumns = @JoinColumn(name = "participante_id")
-    )
+    @Column(nullable = false)
+    private LocalDateTime dataHora;
+
+    @Column(nullable = false)
+    private LocalDateTime prazoAlteracoes;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private StatusEvento status = StatusEvento.RASCUNHO;
+
+    @ManyToMany(mappedBy = "eventos")
     private Set<Participante> participantes = new HashSet<>();
 
-    public Evento(){
+    @OneToMany(mappedBy = "evento")
+    private Set<Categoria> categorias = new HashSet<>();
 
-    }
-    public Evento(Long id, String titulo, Categoria categoria, String descricao, String data) {
-        this.id = id;
-        this.titulo = titulo;
-        this.categoria = categoria;
-        this.descricao = descricao;
-        this.data = data;
+    public Evento() {
     }
 
-    public Long getId(){
+    public Long getId() {
         return id;
     }
 
-    public void setId(Long id){
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public String getTitulo(){
-        return titulo;
+    public String getNome() {
+        return nome;
     }
 
-    public void setTitulo(String titulo){
-        this.titulo = titulo;
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
-    public Categoria getCategoria(){
-        return categoria;
-    }
-
-    public void setCategoria( Categoria categoria){
-        this.categoria = categoria;
-    }
-
-    public String getDescricao(){
+    public String getDescricao() {
         return descricao;
     }
 
-    public void setDescricao(String descricao){
+    public void setDescricao(String descricao) {
         this.descricao = descricao;
     }
 
-    public String getData(){
-        return data;
+    public String getTipo() {
+        return tipo;
     }
 
-    public void setData(String data){
-        this.data = data;
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
     }
 
-    public Set<Participante> getParticipantes(){
+    public LocalDateTime getDataHora() {
+        return dataHora;
+    }
+
+    public void setDataHora(LocalDateTime dataHora) {
+        this.dataHora = dataHora;
+    }
+
+    public LocalDateTime getPrazoAlteracoes() {
+        return prazoAlteracoes;
+    }
+
+    public void setPrazoAlteracoes(LocalDateTime prazoAlteracoes) {
+        this.prazoAlteracoes = prazoAlteracoes;
+    }
+
+    public StatusEvento getStatus() {
+        return status;
+    }
+
+    public void setStatus(StatusEvento status) {
+        this.status = status;
+    }
+
+    public Set<Participante> getParticipantes() {
         return participantes;
+    }
+
+    public void setParticipantes(Set<Participante> participantes) {
+        this.participantes = participantes;
+    }
+
+    public Set<Categoria> getCategorias() {
+        return categorias;
+    }
+
+    public void setCategorias(Set<Categoria> categorias) {
+        this.categorias = categorias;
     }
 }
