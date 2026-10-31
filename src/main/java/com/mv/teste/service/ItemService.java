@@ -55,7 +55,10 @@ public class ItemService {
     public Item atualizar(Long id, ItemRequest req) {
         Item item = buscar(id);
         eventoService.exigirEditavel(item.getCategoria().getEvento());
-        int jaContribuido = item.getContribuicoes().stream().mapToInt(Contribuicao::getQuantidade).sum();
+        int jaContribuido = 0;
+        for (Contribuicao c : item.getContribuicoes()) {
+        jaContribuido += c.getQuantidade();
+        }
         if (req.quantidadeNecessaria() != null && req.quantidadeNecessaria() < jaContribuido) {
             throw new NegocioException("A quantidade necessária não pode ser menor que o já contribuído ("
                     + jaContribuido + ").");

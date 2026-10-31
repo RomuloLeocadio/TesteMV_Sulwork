@@ -7,12 +7,21 @@ import com.mv.teste.model.Evento;
 import com.mv.teste.model.StatusEvento;
 import com.mv.teste.repositories.EventoRepository;
 import java.util.List;
+import java.time.LocalDateTime;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class EventoService {
 
+    public void exigirAceitaContribuicoes(Evento evento) {
+        if (evento.getStatus() != StatusEvento.ABERTO) {
+            throw new NegocioException("O evento não está aberto para contribuições.");
+        }
+        if (LocalDateTime.now().isAfter(evento.getPrazoAlteracoes())) {
+            throw new NegocioException("O prazo para alterações deste evento já terminou.");
+        }
+    }
     private final EventoRepository eventoRepository;
 
     public EventoService(EventoRepository eventoRepository) {
@@ -71,7 +80,7 @@ public class EventoService {
                     + " e não aceita alterações em categorias e itens.");
         }
     }
-    
+
     private void preencher(Evento evento, EventoRequest req) {
         if (req.nome() == null || req.nome().isBlank()) {
             throw new NegocioException("O nome do evento é obrigatório.");
