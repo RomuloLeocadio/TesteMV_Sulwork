@@ -65,6 +65,13 @@ public class EventoService {
         eventoRepository.delete(evento);
     }
 
+    public void exigirEditavel(Evento evento) {
+        if (evento.getStatus() != StatusEvento.RASCUNHO && evento.getStatus() != StatusEvento.ABERTO) {
+            throw new NegocioException("O evento está " + evento.getStatus()
+                    + " e não aceita alterações em categorias e itens.");
+        }
+    }
+    
     private void preencher(Evento evento, EventoRequest req) {
         if (req.nome() == null || req.nome().isBlank()) {
             throw new NegocioException("O nome do evento é obrigatório.");
