@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Eventos de Alimentação</title>
+<style>
+  :root {
+    --azul: #0057b8;
+    --azul-escuro: #003a7a;
+    --verde: #00a86b;
+    --verde-claro: #e3f6ee;
+    --fundo: #f2f6fb;
+    --texto: #1f2a37;
+    --borda: #dbe4ee;
+    --vermelho: #d64545;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    background: var(--fundo);
+    color: var(--texto);
+  }
+
+  /* ---------- Cabeçalho ---------- */
+  header {
+    background: linear-gradient(120deg, var(--azul-escuro), var(--azul) 60%, var(--verde));
+    color: #fff;
+    padding: 28px 16px;
+  }
+  header .conteudo { max-width: 1100px; margin: 0 auto; }
+  header h1 { margin: 0; font-size: 1.7rem; }
+  header p { margin: 6px 0 0; opacity: 0.9; }
+
+  main { max-width: 1100px; margin: 0 auto; padding: 20px 16px 40px; }
+
+  /* ---------- Cartões ---------- */
+  section {
+    background: #fff;
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 18px;
+    box-shadow: 0 2px 8px rgba(0, 40, 90, 0.08);
+    border-top: 4px solid var(--azul);
+    overflow-x: auto;
+  }
+  section.verde { border-top-color: var(--verde); }
+  section h2 { margin: 0 0 12px; font-size: 1.1rem; color: var(--azul-escuro); }
+  h3 { margin: 18px 0 6px; color: var(--azul); font-size: 1rem; }
+
+  #tituloPainel {
+    background: var(--verde-claro);
+    color: #05694a;
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: 1.15rem;
+    margin: 6px 0 18px;
+  }
+
+  /* ---------- Formulários ---------- */
+  .linha { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 8px; }
+  label { font-size: 0.85rem; color: #4b5b6e; display: flex; align-items: center; gap: 6px; }
+
+  input[type="text"], input:not([type]), input[type="number"], input[type="datetime-local"], select {
+    padding: 9px 10px;
+    border: 1px solid var(--borda);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    background: #fff;
+    min-width: 150px;
+  }
+  input:focus, select:focus { outline: 2px solid var(--azul); border-color: var(--azul); }
+
+  /* ---------- Botões ---------- */
+  button {
+    padding: 9px 14px;
+    border: none;
+    border-radius: 8px;
+    background: var(--azul);
+    color: #fff;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: filter 0.15s;
+  }
+  button:hover { filter: brightness(1.12); }
+
+  button.principal { background: var(--verde); }
+
+  /* botões dentro das tabelas ficam menores */
+  table button { padding: 5px 9px; font-size: 0.78rem; margin: 2px; }
+  button[onclick^="mudarStatus"] { background: var(--verde); }
+  button[onclick^="remover"] { background: var(--vermelho); }
+
+  /* ---------- Tabelas ---------- */
+  table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+  th {
+    background: #eaf1fa;
+    color: var(--azul-escuro);
+    text-align: left;
+    padding: 9px 8px;
+    font-size: 0.82rem;
+  }
+  td { padding: 9px 8px; border-bottom: 1px solid var(--borda); font-size: 0.9rem; vertical-align: top; }
+  tr:hover td { background: #f8fbff; }
+
+  /* ---------- Selos de status ---------- */
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #fff;
+  }
+  .badge.RASCUNHO { background: #7b8794; }
+  .badge.ABERTO { background: var(--verde); }
+  .badge.ENCERRADO { background: #e08a1e; }
+  .badge.REALIZADO { background: var(--azul); }
+  .badge.CANCELADO { background: var(--vermelho); }
+
+  /* ---------- Mensagens ---------- */
+  #msg {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    max-width: 340px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    color: #fff;
+    font-weight: 600;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+    display: none;
+    z-index: 10;
+  }
+  #msg.ok { background: var(--verde); }
+  #msg.erro { background: var(--vermelho); }
+
+  /* ---------- Cobertura ---------- */
+  .grande { font-size: 2.2rem; font-weight: 800; color: var(--verde); margin: 0; }
+  progress {
+    width: 100%;
+    height: 16px;
+    border: none;
+    border-radius: 999px;
+    overflow: hidden;
+    background: #e6edf5;
+    appearance: none;
+  }
+  progress::-webkit-progress-bar { background: #e6edf5; }
+  progress::-webkit-progress-value { background: linear-gradient(90deg, var(--azul), var(--verde)); border-radius: 999px; }
+  progress::-moz-progress-bar { background: var(--verde); }
+  .alerta { color: var(--vermelho); font-weight: 700; }
+  .inscritos { color: #4b5b6e; font-size: 0.9rem; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="conteudo">
+    <h1>Eventos de Alimentação</h1>
+    <p>Organize quem leva o quê e acompanhe o que ainda falta em cada evento.</p>
+  </div>
+</header>
+
+<main>
+  <div id="msg"></div>
+
+  <section>
+    <h2>Novo evento</h2>
+    <div class="linha">
+      <input id="evNome" placeholder="Nome">
+      <input id="evDescricao" placeholder="Descrição">
+      <input id="evTipo" placeholder="Tipo (ex.: Churrasco)">
+    </div>
+    <div class="linha">
+      <label>Data e hora <input id="evDataHora" type="datetime-local"></label>
+      <label>Prazo para alterações <input id="evPrazo" type="datetime-local"></label>
+      <button class="principal" onclick="criarEvento()">Criar evento</button>
+    </div>
+
+    <h2 style="margin-top:20px">Eventos cadastrados</h2>
+    <table>
+      <thead><tr><th>Nome</th><th>Tipo</th><th>Data</th><th>Prazo</th><th>Status</th><th>Ações</th></tr></thead>
+      <tbody id="listaEventos"></tbody>
+    </table>
+  </section>
+
+  <div id="painel" style="display:none">
+    <div id="tituloPainel"></div>
+
+    <section class="verde">
+      <h2>Participantes</h2>
+      <div class="linha">
+        <input id="pNome" placeholder="Nome">
+        <input id="pEmail" placeholder="E-mail">
+        <input id="pCpf" placeholder="CPF">
+        <button onclick="criarParticipante()">Cadastrar participante</button>
+      </div>
+      <div class="linha">
+        <select id="selParticipante"></select>
+        <button class="principal" onclick="inscrever()">Inscrever neste evento</button>
+      </div>
+      <p class="inscritos"><b>Inscritos:</b> <span id="listaInscritos"></span></p>
+    </section>
+
+    <section>
+      <h2>Alérgenos</h2>
+      <div class="linha">
+        <input id="alNome" placeholder="Nome (ex.: Lactose)">
+        <input id="alDescricao" placeholder="Descrição">
+        <button onclick="criarAlergeno()">Cadastrar alérgeno</button>
+      </div>
+    </section>
+
+    <section class="verde">
+      <h2>Categorias e itens</h2>
+      <div class="linha">
+        <input id="catNome" placeholder="Nome da categoria">
+        <input id="catMeta" type="number" min="0" placeholder="Meta (unidades)">
+        <button onclick="criarCategoria()">Criar categoria</button>
+      </div>
+      <div class="linha">
+        <select id="itemCategoria"></select>
+        <input id="itemNome" placeholder="Nome do item">
+        <input id="itemQtd" type="number" min="1" placeholder="Quantidade necessária">
+        <label><input id="itemObrig" type="checkbox"> Obrigatório</label>
+        <button class="principal" onclick="criarItem()">Criar item</button>
+      </div>
+      <div class="linha">Alérgenos do item: <span id="alergenosCheck"></span></div>
+      <div id="listaCategorias"></div>
+    </section>
+
+    <section>
+      <h2>Contribuições</h2>
+      <div class="linha">
+        <select id="contribItem"></select>
+        <select id="contribParticipante"></select>
+        <input id="contribQtd" type="number" min="1" placeholder="Quantidade">
+        <button class="principal" onclick="contribuir()">Contribuir</button>
+      </div>
+    </section>
+
+    <section class="verde">
+      <h2>Cobertura do evento</h2>
+      <div id="cobertura"></div>
+    </section>
+  </div>
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>
