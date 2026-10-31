@@ -108,6 +108,7 @@ async function recarregarPainel() {
   await carregarParticipantes();
   await carregarAlergenos();
   await carregarCategorias();
+  await carregarAlertas();
   await carregarCobertura();
 }
 
@@ -145,9 +146,14 @@ function inscrever() {
 
 async function carregarAlergenos() {
   const lista = await api('GET', '/api/alergenos');
-  $('alergenosCheck').innerHTML = lista
+  const itemCheck = lista
     .map((a) => `<label><input type="checkbox" class="chkAlergeno" value="${a.id}"> ${esc(a.nome)}</label>`)
     .join(' ') || 'nenhum cadastrado';
+  const restricaoCheck = lista
+    .map((a) => `<label><input type="checkbox" class="chkRestricao" value="${a.id}"> ${esc(a.nome)}</label>`)
+    .join(' ') || 'nenhum cadastrado';
+  $('alergenosCheck').innerHTML = itemCheck;
+  $('restricaoAlergenosCheck').innerHTML = restricaoCheck;
 }
 
 function criarAlergeno() {
@@ -286,6 +292,38 @@ async function carregarCobertura() {
       ${linhas}
     </table>`;
 }
+/* ---------- Restrições e alertas ---------- */
 
+function criarRestricao() {
+  return executar(async () => {
+    const alergenoIds = [...document.querySelectorAll('.chkRestricao:checked')].map((c) => Number(c.value));
+    await api('POST', `/api/participantes/${$('selParticipante').value}/restricoes`, {
+      tipo: $('rTipo').value,
+      observacoes: $('rObs').value,
+      alergenoIds: alergenoIds
+    });
+    aviso('Restrição adicionada.');
+    $('rTipo').value = '';
+    $('rObs').value = '';
+    await recarregarPainel();
+  });
+}
+
+async function carregarAlertas() {
+  const alertas = await api('GET', `/api/eventos/${eventoId}/alertas-alergenos`);
+  if (alertas.length === 0) {
+    $('alertas').innerHTML = '<p>Nenhum conflito entre os itens e as restrições dos inscritos.</p>';
+    return;
+  }
+  const linhas = alertas.map((a) => `<tr>
+    <td>${esc(a.itemNome)}</td>
+    <td>${a.alergenos.map(esc).join(', ')}</td>
+    <td class="alerta">${a.participantesAfetados.map(esc).join(', ')}</td>
+  </tr>`).join('');
+  $('alertas').innerHTML = `<table>
+    <tr><th>Item</th><th>Contém</th><th>Atenção: afeta</th></tr>
+    ${linhas}
+  </table>`;
+}
 /* ---------- Início ---------- */
 executar(carregarEventos);

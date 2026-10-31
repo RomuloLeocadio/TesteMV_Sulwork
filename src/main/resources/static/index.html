@@ -204,6 +204,13 @@
         <select id="selParticipante"></select>
         <button class="principal" onclick="inscrever()">Inscrever neste evento</button>
       </div>
+            <div class="linha"><b>Restrição alimentar do participante selecionado acima:</b></div>
+      <div class="linha">
+        <input id="rTipo" placeholder="Tipo (ex.: Intolerante à lactose)">
+        <input id="rObs" placeholder="Observações">
+        <button onclick="criarRestricao()">Adicionar restrição</button>
+      </div>
+      <div class="linha">Alérgenos que ele não pode consumir: <span id="restricaoAlergenosCheck"></span></div>
       <p class="inscritos"><b>Inscritos:</b> <span id="listaInscritos"></span></p>
     </section>
 
@@ -244,6 +251,11 @@
       </div>
     </section>
 
+    <section>
+      <h2>Alertas de alérgenos</h2>
+      <div id="alertas"></div>
+    </section>
+    
     <section class="verde">
       <h2>Cobertura do evento</h2>
       <div id="cobertura"></div>
