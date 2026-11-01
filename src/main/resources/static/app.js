@@ -58,8 +58,14 @@ function formatar(dataHora) {
 async function carregarEventos() {
   const eventos = await api('GET', '/api/eventos');
   $('listaEventos').innerHTML = eventos.map((e) => {
+    const ROTULOS = {
+      ABERTO: 'ABRIR',
+      ENCERRADO: 'ENCERRAR',
+      REALIZADO: 'REALIZAR',
+      CANCELADO: 'CANCELAR'
+    };
     const botoes = TRANSICOES[e.status]
-      .map((novo) => `<button onclick="mudarStatus(${e.id}, '${novo}')">${novo}</button>`)
+      .map((novo) => `<button onclick="mudarStatus(${e.id}, '${novo}')">${ROTULOS[novo] || novo}</button>`)
       .join('');
     return `<tr>
       <td>${esc(e.nome)}</td><td>${esc(e.tipo)}</td>
