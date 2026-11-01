@@ -2,6 +2,16 @@
 
 Projeto do desafio da Sulwork: um sistema para organizar eventos de alimentação, onde os participantes combinam o que levar e dá para ver o que ainda falta.
 
+## Aplicação publicada
+
+- Sistema: https://testemv-sulwork.onrender.com/
+- Swagger: https://testemv-sulwork.onrender.com/swagger-ui/index.html
+
+Publiquei no Render (aplicação em Docker) com o banco PostgreSQL do próprio Render, ambos no plano gratuito. Por isso duas observações:
+
+- A aplicação "dorme" depois de 15 minutos sem acesso, então a primeira abertura pode levar cerca de 1 minuto.
+- O banco gratuito do Render expira em 01/12/2026. Depois dessa data o sistema deixa de funcionar a menos que o banco seja recriado (basta trocar as variáveis de ambiente SPRING_DATASOURCE_URL, SPRING_DATASOURCE_USERNAME e SPRING_DATASOURCE_PASSWORD).
+
 ## O que usei
 
 - Java 21 + Spring Boot (API REST, JPA/Hibernate)
